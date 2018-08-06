@@ -1,0 +1,107 @@
+InputConfiguration:
+  DataOptions:
+    RECORDCODE:
+      index: 0
+      size: 3
+    CLIENT_TYPE:
+      index: 3
+      size: 4
+    CLIENT_NUMBER:
+      index: 7
+      size: 4
+    ACCOUNT_NUMBER:
+      index: 11
+      size: 4
+    SUBACCOUNT_NUMBER:
+      index: 15
+      size: 4
+    OPPOSITE_PARTY_CODE:
+      index: 19
+      size: 6
+    PRODUCT_GROUP_CODE:
+      index: 25
+      size: 2
+    EXCHANGE_CODE:
+      index: 27
+      size: 4
+    SYMBOL:
+      index: 31
+      size: 6
+    EXPIRATION_DATE:
+      index: 37
+      size: 8
+    CURRENCY_CODE:
+      index: 45
+      size: 3
+    MOVEMOENT_CDE:
+      index: 48
+      size: 2
+    BUY_SELL_CODE:
+      index: 50
+      size: 1
+    QUANTITY_LONG_SIGN:
+      index: 51
+      size: 1
+    QUANTITY_LONG:
+      index: 52
+      size: 10
+    QUANTITY_SHORT_SIGN:
+      index: 62
+      size: 1
+    QUANTITY_SHORT:
+      index: 63
+      size: 10
+    EXCH_BROKER_FEE_DEC:
+      index: 73
+      size: 12
+    EXCH_BROKER_FEE_DC:
+      index: 85
+      size: 1
+    EXCH_BROKER_FEE_CUR_CODE:
+      index: 86
+      size: 3
+    CLEARING_BROKER_FEE_DEC:
+      index: 89
+      size: 12
+    CLEARING_BROKER_FEE_DC:
+      index: 101
+      size: 1
+    CLEARING_BROKER_CUR_CODE:
+      index: 102
+      size: 3
+    COMMISSION:
+      index: 105
+      size: 12
+    COMMISSION_DC:
+        index: 117
+        size: 1
+    COMMISSION_CURR_CODE:
+      index: 118
+      size: 3
+    TRANSCATION_DATE:
+      index: 121
+      size: 8
+    FUTURE_REFERENCE:
+      index: 129
+      size: 6
+    TICKET_NUMBER:
+      index: 135
+      size: 6
+    EXTERNAL_NUMBER:
+      index: 141
+      size: 6
+    TRANSACTION_PRICE_DEC:
+      index: 147
+      size: 15
+    TRANSACTION_INITIALS:
+      index: 162
+      size: 6
+    OPPOSITE_TRADE_ID:
+      index: 168
+      size: 7
+    OPEN_CLOSE_CODE:
+      index: 175
+      size: 1
+    FILTER:
+      index: 176
+      size: 127

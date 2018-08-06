@@ -1,0 +1,147 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE"
+	}
+}
+
+apply plugin: "groovy"
+apply plugin: 'maven'
+apply plugin: 'war'
+apply plugin: 'checkstyle'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
+
+sourceCompatibility = 1.8
+
+repositories {
+	maven { url "http://nexus.qcpaws.qantas.com.au/nexus/content/repositories/central" }
+	maven { url "http://nexus.qcpaws.qantas.com.au/nexus/content/repositories/thirdparty" }
+	maven { url "http://nexus.qcpaws.qantas.com.au/nexus/content/repositories/internal" }
+	mavenCentral()
+}
+
+def apiVersion = '2.8.0'
+
+war {
+	baseName = 'entife'
+	version = apiVersion
+}
+
+configurations {
+	integrationTestCompile.extendsFrom testCompile
+	integrationTestRuntime.extendsFrom testRuntime
+}
+
+
+checkstyle {
+	toolVersion = '7.5.1'
+	configFile = rootProject.file('checkstyle.xml')
+}
+
+
+sourceSets {
+	integrationTest {
+		java {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+			srcDir file('src/integration-test/java')
+		}
+		resources.srcDir file('src/integration-test/resources')
+	}
+}
+
+jacocoTestReport {
+	reports {
+		//XML required by coveralls and for the below coverage checks
+		xml.enabled true
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.85
+			}
+		}
+	}
+}
+
+bootRun {
+	environment SPRING_PROFILES_ACTIVE: environment.SPRING_PROFILES_ACTIVE ?: "local"
+}
+
+tasks.withType(Test) {
+	reports.html.destination = file("${reporting.baseDir}/${name}")
+	systemProperties['pact.rootDir'] = "$buildDir/pacts"
+	testLogging {
+		// set options for log level LIFECYCLE
+		events "passed", "skipped", "failed", "standardOut"
+		showExceptions true
+		exceptionFormat "full"
+		showCauses true
+		showStackTraces true
+
+		// set options for log level DEBUG and INFO
+		debug {
+			events "started", "passed", "skipped", "failed", "standardOut", "standardError"
+			exceptionFormat "full"
+		}
+		info.events = debug.events
+		info.exceptionFormat = debug.exceptionFormat
+
+		afterSuite { desc, result ->
+			if (!desc.parent) { // will match the outermost suite
+				def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+				def startItem = '|  ', endItem = '  |'
+				def repeatLength = startItem.length() + output.length() + endItem.length()
+				println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+			}
+		}
+	}
+}
+
+task integrationTest(type: Test) {
+	testClassesDir = sourceSets.integrationTest.output.classesDir
+	classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+check.dependsOn integrationTest
+integrationTest.mustRunAfter test
+
+dependencies {
+	def springBootVersion = '1.5.1.RELEASE'
+	def lombokVersion = '1.16.8'
+	def groovyVersion = '2.4.4'
+	def spockVersion = '1.0-groovy-2.4'
+	def jacksonYaml = '2.8.3'
+	def jsonUnitVersion = '1.19.0'
+	def restAssuredVersion = '3.0.2'
+	def cglibVersion = '3.2.4'
+	def logstashVersion = '4.8'
+	def guavaVersion = '21.0'
+	def asyncHttpClientVersion = '2.0.29'
+	def swaggerVersion = '2.7.0'
+
+	compile 'org.springframework.boot:spring-boot-starter-actuator:' + springBootVersion
+	compile 'org.springframework.boot:spring-boot-starter-web:' + springBootVersion
+	compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:' + jacksonYaml
+	compile 'io.rest-assured:rest-assured:' + restAssuredVersion
+	compile 'net.logstash.logback:logstash-logback-encoder:'+ logstashVersion
+	compile 'org.projectlombok:lombok:' + lombokVersion
+	compile 'com.google.guava:guava:' + guavaVersion
+	compile 'org.asynchttpclient:async-http-client:' + asyncHttpClientVersion
+
+	compile 'org.apache.commons:commons-csv:1.5'
+	compile 'io.springfox:springfox-swagger2:' + swaggerVersion
+	compile 'io.springfox:springfox-swagger-ui:' + swaggerVersion
+
+	testCompile 'net.javacrumbs.json-unit:json-unit-fluent:' + jsonUnitVersion
+	testCompile 'org.codehaus.groovy:groovy-all:' + groovyVersion
+	testCompile 'org.spockframework:spock-core:' + spockVersion
+	testCompile 'cglib:cglib-nodep:' + cglibVersion
+	testCompile 'org.springframework.boot:spring-boot-starter-test:' + springBootVersion
+}
