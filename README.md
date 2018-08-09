@@ -1,8 +1,8 @@
-# Email send service
+# Report service
 
 ## Problem :
 
-Email sender servoce abstracting between mail gun and send grid servers.
+Generate dialy report from the text file as per specifications.
 
 
 #How to run: 
